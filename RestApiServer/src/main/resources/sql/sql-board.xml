@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bitc.restapiserver.mapper.BoardMapper">
+  <select id="getBoardList" resultType="com.bitc.restapiserver.dto.BoardDto">
+    SELECT
+      board_idx, title, contents, create_id, create_dt, update_id, update_dt, hit_cnt, deleted_yn
+    FROM
+      sboard
+    WHERE
+      deleted_yn = 'N'
+    ORDER BY
+      board_idx DESC
+  </select>
+
+  <select id="getBoardDetail" parameterType="int" resultType="com.bitc.restapiserver.dto.BoardDto">
+    SELECT
+      board_idx, title, contents, create_id, create_dt, update_id, update_dt, hit_cnt, deleted_yn
+    FROM
+      sboard
+    WHERE
+    board_idx=#{boardIdx}
+  </select>
+
+  <insert id="boardWrite" parameterType="com.bitc.restapiserver.dto.BoardDto">
+    INSERT INTO
+      sboard (title, contents, create_id, create_dt)
+    VALUES
+      (#{title}, #{contents}, #{createId}, NOW())
+  </insert>
+
+  <delete id="boardDelete" parameterType="int">
+    UPDATE
+      sboard
+    SET
+      deleted_yn = 'Y'
+    WHERE
+      board_idx = #{boardIdx};
+  </delete>
+
+
+  <update id="boardEdit" parameterType="com.bitc.restapiserver.dto.BoardDto">
+    UPDATE
+      sboard
+    SET
+      title = #{title}, contents = #{contents}, update_id = #{updateId}, update_dt = NOW()
+    WHERE
+      board_idx = #{boardIdx}
+  </update>
+</mapper>
